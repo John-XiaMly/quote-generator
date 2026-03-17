@@ -1,232 +1,509 @@
-export default function QuoteGeneratorClone() {
-  const today = new Date().toISOString().slice(0, 10)
+"use client";
 
-  const inputClass =
-    'w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-zinc-400'
-  const cardClass = 'rounded-2xl border border-zinc-200 bg-white shadow-sm'
+import React, {useState} from 'react';
+import {
+    Box,
+    Button,
+    Container,
+    Flex,
+    Heading,
+    HStack,
+    VStack,
+    Text,
+    Input,
+    SimpleGrid,
+    Icon,
+    Separator,
+    Alert,
+    Collapsible,
+    FileUpload,
+    InputGroup,
+    Tabs,
+    Stack,
+    NativeSelect,
+    Link,
+    Textarea
+} from '@chakra-ui/react';
+import {
+    Building2,
+    ChevronDown,
+    ChevronUp,
+    Copy, DollarSign,
+    Eye,
+    FileText,
+    Mail,
+    MapPin,
+    PanelRightClose,
+    Phone,
+    Plus,
+    ScrollText,
+    Trash2,
+    User
+} from "lucide-react";
+import { LuGithub, LuShoppingCart, LuUpload } from "react-icons/lu";
+import { CustomDatePicker } from "@/components/form/CustomDatePicker";
+import { FloatingInput } from "@/components/form/FloatingInput";
+import { CustomNumberInput } from "@/components/form/CustomNumberInput";
+import { CustomTable } from "@/components/data/CustomTable";
+import { CustomCheckbox } from "@/components/form/CustomCheckbox";
+import { CustomTooltip } from "@/components/text/CustomTooltip";
 
-  return (
-    <div className="min-h-screen bg-zinc-100 text-zinc-900">
-      <div className="mx-auto max-w-[1180px] px-6 py-8">
-        <div className="mb-6 flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-bold tracking-tight">報價單產生器</h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <button className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium shadow-sm">
-              GitHub Star
-            </button>
-            <button className="rounded-lg border border-zinc-300 bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-700 shadow-sm">
-              登入
-            </button>
-          </div>
-        </div>
+export default function QuoteGeneratorChakra() {
+    const [open, setOpen] = useState(false);
+    // 色彩配置
+    const formBg = {base: 'gray.200'};
+    const inputBg = {base: 'white'};
+    const borderColor = {base: 'gray.200', _dark: 'gray.700'};
 
-        <div className="mb-4 flex items-center gap-2 rounded-xl border border-zinc-200 bg-white p-1 shadow-sm">
-          <button className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-zinc-900 shadow-sm border border-zinc-200">
-            報價單
-          </button>
-          <button className="rounded-lg px-4 py-2 text-sm text-zinc-500">更新紀錄</button>
-        </div>
+    const columns = [
+        { key: "category", name: "類別" },
+        { key: "item", name: "項目" },
+        { key: "price", name: "單價" },
+        { key: "quantity", name: "數量" },
+        { key: "amount", name: "金額" }
+    ];
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.2fr_1fr]">
-          <div className="space-y-6">
-            <section className={cardClass}>
-              <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-5">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-zinc-100 text-xl">📄</div>
-                  <h2 className="text-2xl font-bold">基本資料</h2>
-                </div>
-                <button className="text-sm text-zinc-500">隱藏預覽</button>
-              </div>
+    const data = [
+        { category: "-", item: "網站設計與開發", price: 36000, quantity: 1, amount: 36000 },
+        { category: "-", item: "版面客製與 PDF 匯出", price: 12000, quantity: 1, amount: 12000 }
+    ]
 
-              <div className="space-y-6 p-6">
-                <div className="rounded-2xl bg-zinc-50 p-5">
-                  <div className="mb-5 flex items-center gap-2 text-lg font-semibold">
-                    <span>👥</span>
-                    <span>客戶資料</span>
-                  </div>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">客戶名稱 <span className="text-red-500">*</span></label>
-                      <input className={inputClass} placeholder="請輸入客戶名稱" />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">統一編號</label>
-                      <input className={inputClass} placeholder="請輸入統一編號" />
-                    </div>
-                  </div>
-                  <button className="mt-5 text-sm font-medium text-zinc-700">⌄ LOGO、聯絡人、電話、地址</button>
-                </div>
+    return (
+        <Box minH="100vh" bg="gray.50" py={8} color="gray.800">
+            <Container maxW="1400px">
+                {/* Header */}
+                <Flex justify="space-between" align="start" mb={6}>
+                    <Heading size="2xl" letterSpacing="tight">
+                        報價單產生器
+                    </Heading>
+                    <HStack spacing={3}>
+                        <Button size="sm" variant="outline" colorPalette="cyan" borderRadius="xl">
+                            <Icon size="lg">
+                                <LuGithub/>
+                            </Icon>
+                            <Text>Star</Text>
+                        </Button>
+                        <Button size="sm" variant="outline" colorPalette="cyan" borderRadius="xl">
+                            登入
+                        </Button>
+                    </HStack>
+                </Flex>
 
-                <div className="rounded-2xl bg-zinc-50 p-5">
-                  <div className="mb-5 flex items-center gap-2 text-lg font-semibold">
-                    <span>🧾</span>
-                    <span>報價人員資料</span>
-                  </div>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">報價公司/人員 <span className="text-red-500">*</span></label>
-                      <input className={inputClass} placeholder="請輸入報價人員" />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">統一編號</label>
-                      <input className={inputClass} placeholder="請輸入統一編號" />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">E-mail <span className="text-red-500">*</span></label>
-                      <input className={inputClass} placeholder="請輸入電子信箱" />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">聯絡電話</label>
-                      <div className="flex gap-2">
-                        <input className={inputClass + ' flex-1'} placeholder="09xx-xxx-xxx 或 0x-xx" />
-                        <input className="w-24 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm" placeholder="分機" />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">報價日期</label>
-                      <input className={inputClass} defaultValue={today} />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">有效日期</label>
-                      <input className={inputClass} placeholder="------" />
-                    </div>
-                  </div>
-                  <button className="mt-5 text-sm font-medium text-zinc-700">⌄ LOGO、發票章、地址</button>
-                </div>
-              </div>
-            </section>
+                {/* Tab Switcher */}
+                <HStack mb={4} p={1} bg="white" border="1px" borderColor="gray.200" borderRadius="xl" shadow="sm"
+                        w="fit-content">
+                    <Tabs.Root defaultValue="quote">
+                        <Tabs.List>
+                            <Tabs.Trigger value="quote">
+                                報價單
+                            </Tabs.Trigger>
+                            <Tabs.Trigger value="logs">
+                                更新紀錄
+                            </Tabs.Trigger>
+                        </Tabs.List>
+                        <Tabs.Content value="quote" p={2}>
+                            <SimpleGrid columns={{base: 1, lg: 2}} spacing={6} templateColumns={{lg: '1.2fr 1fr'}}
+                                        gap={6}>
+                                <VStack spacing={6} align="stretch" flex={1}>
+                                    {/* 基本資料 Section */}
+                                    <Box borderRadius="2xl" border="1px" borderColor={borderColor} shadow="sm"
+                                         overflow="hidden">
+                                        <Flex justify="space-between" align="center" px={6} py={5} borderBottom="1px"
+                                              borderColor="gray.100">
+                                            <HStack spacing={3}>
+                                                <Flex w={11} h={11} align="center" justify="center" bg="gray.100"
+                                                      borderRadius="full">
+                                                    <FileText/>
+                                                </Flex>
+                                                <Heading size="xl">基本資料</Heading>
+                                            </HStack>
+                                            <Button variant="link" size="sm" color="gray.500">
+                                                <PanelRightClose/>
+                                                隱藏預覽
+                                            </Button>
+                                        </Flex>
 
-            <section className={cardClass}>
-              <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-5">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-zinc-100 text-xl">🛒</div>
-                  <h2 className="text-2xl font-bold">服務項目</h2>
-                </div>
-                <button className="rounded-xl bg-sky-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-sky-800">
-                  ＋ 新增項目
-                </button>
-              </div>
+                                        <VStack spacing={6} p={6} align="stretch">
+                                            {/* 客戶資料 */}
+                                            <Box bg={formBg} p={5} borderRadius="2xl">
+                                                <HStack mb={5} fontSize="lg" fontWeight="semibold">
+                                                    <User/>
+                                                    <Text>客戶資料</Text>
+                                                </HStack>
+                                                <SimpleGrid columns={{base: 1, md: 2}} spacing={4}>
+                                                    <Box p={1}>
+                                                        <Text mb={2} fontSize="sm" fontWeight="medium">
+                                                            客戶名稱
+                                                            <Text as="span" color="red.500">*</Text>
+                                                        </Text>
+                                                        <InputGroup startElement={<Building2 size={16}/>}>
+                                                            <Input bg={inputBg} placeholder="請輸入客戶名稱"
+                                                                   borderRadius="xl"/>
+                                                        </InputGroup>
+                                                    </Box>
+                                                    <Box p={1}>
+                                                        <Text mb={2} fontSize="sm" fontWeight="medium">統一編號</Text>
+                                                        <InputGroup startElement={<FileText size={16}/>}>
+                                                            <Input bg={inputBg} placeholder="請輸入統一編號"
+                                                                   borderRadius="xl"/>
+                                                        </InputGroup>
+                                                    </Box>
+                                                </SimpleGrid>
+                                                <Collapsible.Root>
+                                                    <Collapsible.Trigger padding="2">
+                                                        <HStack mb={5} fontSize="lg" fontWeight="semibold"
+                                                                onClick={() => setOpen(!open)}>
+                                                            {open ? <ChevronUp/> : <ChevronDown/>}
+                                                            <Text>LOGO、聯絡人、電話、地址</Text>
+                                                        </HStack>
+                                                    </Collapsible.Trigger>
+                                                    <Collapsible.Content>
+                                                        <SimpleGrid spacing={4}>
+                                                            <Box>
+                                                                <Text mb={2} fontSize="sm" fontWeight="medium">
+                                                                    客戶 Logo
+                                                                    <Text as="span" color="red.500">*</Text>
+                                                                </Text>
+                                                                <FileUpload.Root maxW="4xl" alignItems="stretch"
+                                                                                 maxFiles={10}>
+                                                                    <FileUpload.HiddenInput/>
+                                                                    <FileUpload.Dropzone>
+                                                                        <Icon size="md" color="fg.muted">
+                                                                            <LuUpload/>
+                                                                        </Icon>
+                                                                        <FileUpload.DropzoneContent>
+                                                                            <Text color="fg.muted">上傳客戶 Logo</Text>
+                                                                            <Text color="fg.muted">支援
+                                                                                PNG、JPG、GIF</Text>
+                                                                        </FileUpload.DropzoneContent>
+                                                                    </FileUpload.Dropzone>
+                                                                    <FileUpload.List/>
+                                                                </FileUpload.Root>
+                                                            </Box>
+                                                        </SimpleGrid>
+                                                        <SimpleGrid columns={{base: 1, md: 2}} spacing={4}>
+                                                            <Box p={1}>
+                                                                <Text mb={2} fontSize="sm" fontWeight="medium">
+                                                                    聯絡人
+                                                                </Text>
+                                                                <InputGroup startElement={<User size={16}/>}>
+                                                                    <Input bg={inputBg} placeholder="請輸入聯絡人"
+                                                                           borderRadius="xl"/>
+                                                                </InputGroup>
+                                                            </Box>
+                                                            <Box p={1}>
+                                                                <Text mb={2} fontSize="sm"
+                                                                      fontWeight="medium">連絡電話</Text>
+                                                                <InputGroup startElement={<Phone size={16}/>}>
+                                                                    <Input bg={inputBg} placeholder="請輸入連絡電話"
+                                                                           borderRadius="xl"/>
+                                                                </InputGroup>
+                                                            </Box>
+                                                        </SimpleGrid>
+                                                        <SimpleGrid columns={{base: 1, md: 2}} spacing={4}>
+                                                            <Box p={1}>
+                                                                <Text mb={2} fontSize="sm" fontWeight="medium">
+                                                                    Email
+                                                                </Text>
+                                                                <InputGroup startElement={<Mail size={16}/>}>
+                                                                    <Input bg={inputBg} placeholder="請輸入Email"
+                                                                           borderRadius="xl"/>
+                                                                </InputGroup>
+                                                            </Box>
+                                                            <Box p={1}>
+                                                                <Text mb={2} fontSize="sm"
+                                                                      fontWeight="medium">地址</Text>
+                                                                <InputGroup startElement={<MapPin size={16}/>}>
+                                                                    <Input bg={inputBg} placeholder="請輸入地址"
+                                                                           borderRadius="xl"/>
+                                                                </InputGroup>
+                                                            </Box>
+                                                        </SimpleGrid>
+                                                    </Collapsible.Content>
+                                                </Collapsible.Root>
+                                            </Box>
 
-              <div className="overflow-x-auto p-6">
-                <table className="w-full min-w-[760px] border-separate border-spacing-y-3 text-sm">
-                  <thead>
-                    <tr className="text-zinc-500">
-                      <th className="px-3 text-left font-medium">類別</th>
-                      <th className="px-3 text-left font-medium">項目</th>
-                      <th className="px-3 text-left font-medium">說明</th>
-                      <th className="px-3 text-right font-medium">單價</th>
-                      <th className="px-3 text-right font-medium">數量</th>
-                      <th className="px-3 text-right font-medium">金額</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="rounded-l-xl border border-zinc-200 bg-white px-3 py-3">-</td>
-                      <td className="border-y border-zinc-200 bg-white px-3 py-3">網站設計與開發</td>
-                      <td className="border-y border-zinc-200 bg-white px-3 py-3 text-zinc-500">前台頁面、表單、報價預覽</td>
-                      <td className="border-y border-zinc-200 bg-white px-3 py-3 text-right">NT$ 36,000</td>
-                      <td className="border-y border-zinc-200 bg-white px-3 py-3 text-right">1</td>
-                      <td className="rounded-r-xl border border-zinc-200 bg-white px-3 py-3 text-right font-semibold">NT$ 36,000</td>
-                    </tr>
-                    <tr>
-                      <td className="rounded-l-xl border border-zinc-200 bg-white px-3 py-3">-</td>
-                      <td className="border-y border-zinc-200 bg-white px-3 py-3">版面客製與 PDF 匯出</td>
-                      <td className="border-y border-zinc-200 bg-white px-3 py-3 text-zinc-500">PDF、圖片、Excel 匯出</td>
-                      <td className="border-y border-zinc-200 bg-white px-3 py-3 text-right">NT$ 12,000</td>
-                      <td className="border-y border-zinc-200 bg-white px-3 py-3 text-right">1</td>
-                      <td className="rounded-r-xl border border-zinc-200 bg-white px-3 py-3 text-right font-semibold">NT$ 12,000</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          </div>
+                                            {/* 報價人員資料 */}
+                                            <Box bg={formBg} p={5} borderRadius="2xl">
+                                                <HStack mb={5} fontSize="lg" fontWeight="semibold">
+                                                    <ScrollText/>
+                                                    <Text>報價人員資料</Text>
+                                                </HStack>
+                                                <SimpleGrid columns={{base: 1, md: 2}} spacing={4}>
+                                                    <Box p={1}>
+                                                        <Text mb={2} fontSize="sm" fontWeight="medium">
+                                                            報價公司/人員
+                                                            <Text as="span" color="red.500">*</Text>
+                                                        </Text>
+                                                        <InputGroup startElement={<User size={16}/>}>
+                                                            <Input bg={inputBg} placeholder="請輸入報價人員"
+                                                                   borderRadius="xl"/>
+                                                        </InputGroup>
+                                                    </Box>
+                                                    <Box p={1}>
+                                                        <Text mb={2} fontSize="sm" fontWeight="medium">統一編號</Text>
+                                                        <InputGroup startElement={<FileText size={16}/>}>
+                                                            <Input bg={inputBg} placeholder="請輸入統一編號"
+                                                                   borderRadius="xl"/>
+                                                        </InputGroup>
+                                                    </Box>
+                                                    <Box p={1}>
+                                                        <Text mb={2} fontSize="sm" fontWeight="medium">
+                                                            Email
+                                                            <Text as="span" color="red.500">*</Text>
+                                                        </Text>
+                                                        <InputGroup startElement={<Mail size={16}/>}>
+                                                            <Input bg={inputBg} placeholder="請輸入Email"
+                                                                   borderRadius="xl"/>
+                                                        </InputGroup>
+                                                    </Box>
+                                                    <Box p={1}>
+                                                        <Text mb={2} fontSize="sm" fontWeight="medium">聯絡電話</Text>
+                                                        <HStack>
+                                                            <InputGroup startElement={<Phone size={16}/>}>
+                                                                <Input bg={inputBg} placeholder="請輸入聯絡電話"
+                                                                       borderRadius="xl"/>
+                                                            </InputGroup>
+                                                            <Input bg={inputBg} placeholder="分機" w="24"
+                                                                   borderRadius="xl"/>
+                                                        </HStack>
 
-          <aside className={cardClass + ' h-fit sticky top-6'}>
-            <div className="border-b border-zinc-100 px-6 py-5">
-              <div className="flex items-center gap-2 text-2xl font-bold">
-                <span>👁️</span>
-                <span>即時預覽</span>
-              </div>
-            </div>
+                                                    </Box>
+                                                    <Box p={1}>
+                                                        <CustomDatePicker label={"報價日期"} bg={inputBg}
+                                                                          borderRadius="xl"/>
+                                                    </Box>
+                                                    <Box p={1}>
+                                                        <CustomDatePicker label={"有效日期"} bg={inputBg}
+                                                                          borderRadius="xl"/>
+                                                    </Box>
+                                                </SimpleGrid>
+                                            </Box>
+                                        </VStack>
+                                    </Box>
 
-            <div className="space-y-5 p-6">
-              <div className="rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-800">
-                請先完成必填欄位後才能匯出報價單
-              </div>
+                                    {/* 服務項目 Section */}
+                                    <Box mt={2} borderRadius="2xl" border="1px" borderColor={borderColor} shadow="sm">
+                                        <Flex justify="space-between" align="center" px={6} py={5} borderBottom="1px"
+                                              borderColor="gray.100">
+                                            <HStack spacing={3}>
+                                                <Flex w={11} h={11} align="center" justify="center" bg="gray.100"
+                                                      borderRadius="full">
+                                                    <LuShoppingCart/>
+                                                </Flex>
+                                                <Heading size="xl">服務項目</Heading>
+                                            </HStack>
+                                            <Button variant="outline" colorPalette="cyan" borderRadius="xl">
+                                                <Plus/>
+                                                新增項目
+                                            </Button>
+                                        </Flex>
 
-              <div className="flex flex-wrap gap-2">
-                <button className="rounded-lg border border-zinc-200 bg-zinc-100 px-4 py-2 text-sm text-zinc-400">PDF</button>
-                <button className="rounded-lg border border-zinc-200 bg-zinc-100 px-4 py-2 text-sm text-zinc-400">圖片</button>
-                <button className="rounded-lg border border-zinc-200 bg-zinc-100 px-4 py-2 text-sm text-zinc-400">Excel</button>
-              </div>
+                                        <Box p={6} overflowX="auto">
+                                            <HStack gap={4} alignItems="flex-start">
+                                                <FloatingInput label="類別" width="150px" />
+                                                <FloatingInput
+                                                    label="項目"
+                                                    width="100px"
+                                                    errorText="項目名稱不得為空"
+                                                    invalid
+                                                />
+                                                <FloatingInput label="單價" width="100px" errorText="單價不得為空" invalid />
+                                                <FloatingInput label="數量" width="80px" defaultValue={1} />
+                                                {/*<FloatingInput label="單位" width="100px" />*/}
+                                                <FloatingInput label="金額" width="120px" value={0} disabled />
 
-              <div>
-                <div className="mb-3 text-sm font-medium text-zinc-500">選擇報價單樣式</div>
-                <div className="flex gap-2">
-                  <button className="rounded-lg border-2 border-sky-700 bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-900">精美版</button>
-                  <button className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm">詳細版</button>
-                  <button className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm">並列版</button>
-                </div>
-              </div>
+                                                <HStack >
+                                                    <CustomTooltip
+                                                        trigger={
+                                                            <Button size="sm" variant="outline" colorPalette="cyan">
+                                                                <Copy />
+                                                            </Button>
+                                                        }
+                                                        content="複製" />
+                                                    <CustomTooltip
+                                                        trigger={
+                                                            <Button size="sm" variant="outline" colorPalette="red">
+                                                                <Trash2 />
+                                                            </Button>
+                                                        }
+                                                        content="刪除" />
+                                                    <Separator />
+                                                </HStack>
+                                            </HStack>
 
-              <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-                <h3 className="mb-5 text-3xl font-bold">[客戶名稱] - 報價單</h3>
-                <div className="mb-6 h-px bg-zinc-200" />
-                <div className="mb-6 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-                  <div className="font-semibold">報價人員：</div>
-                  <div>-</div>
-                  <div className="font-semibold">報價日期：</div>
-                  <div>{today}</div>
-                </div>
+                                            <HStack alignItems="flex-start" justifyContent="space-between">
+                                                <Stack gap="4" width="50%">
+                                                    {/* 折扣設定 */}
+                                                    <Box>
+                                                        <Text fontSize="sm" fontWeight="bold" mb="2">折扣設定</Text>
+                                                        <HStack>
+                                                            <NativeSelect.Root width="150px">
+                                                                <NativeSelect.Field>
+                                                                    <option value="fixed">固定金額</option>
+                                                                    <option value="percent">百分比</option>
+                                                                </NativeSelect.Field>
+                                                            </NativeSelect.Root>
+                                                            <CustomNumberInput defaultValue={0} min={0} startElement={<DollarSign size={16} />} />
+                                                        </HStack>
+                                                    </Box>
 
-                <div className="overflow-hidden rounded-xl border border-zinc-200">
-                  <table className="w-full text-sm">
-                    <thead className="bg-zinc-50 text-zinc-600">
-                      <tr>
-                        <th className="px-4 py-3 text-left font-medium">類別</th>
-                        <th className="px-4 py-3 text-left font-medium">項目</th>
-                        <th className="px-4 py-3 text-right font-medium">單價</th>
-                        <th className="px-4 py-3 text-right font-medium">數量</th>
-                        <th className="px-4 py-3 text-right font-medium">金額</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-t border-zinc-200">
-                        <td className="px-4 py-3">-</td>
-                        <td className="px-4 py-3">網站設計與開發</td>
-                        <td className="px-4 py-3 text-right">$36,000</td>
-                        <td className="px-4 py-3 text-right">1</td>
-                        <td className="px-4 py-3 text-right">$36,000</td>
-                      </tr>
-                      <tr className="border-t border-zinc-200">
-                        <td className="px-4 py-3">-</td>
-                        <td className="px-4 py-3">版面客製與 PDF 匯出</td>
-                        <td className="px-4 py-3 text-right">$12,000</td>
-                        <td className="px-4 py-3 text-right">1</td>
-                        <td className="px-4 py-3 text-right">$12,000</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                                                    {/* 稅別 */}
+                                                    <Box>
+                                                        <Text fontSize="sm" fontWeight="bold" mb="2">稅別</Text>
+                                                        <NativeSelect.Root>
+                                                            <NativeSelect.Field placeholder="請選擇稅別">
+                                                                <option value="taxed">應稅</option>
+                                                                <option value="zero">零稅率</option>
+                                                                <option value="exempt">免稅</option>
+                                                            </NativeSelect.Field>
+                                                        </NativeSelect.Root>
+                                                    </Box>
+                                                </Stack>
 
-                <div className="mt-4 text-right text-lg font-semibold">
-                  未稅：<span className="text-red-600">NT$ 48,000 元</span>
-                </div>
+                                                {/* 右側金額統計 */}
+                                                <Stack width="200px" gap="4" textAlign="right">
+                                                    <HStack justifyContent="space-between">
+                                                        <Text color="gray.500">小計</Text>
+                                                        <Text fontWeight="bold" fontSize="lg">$0</Text>
+                                                    </HStack>
+                                                    <Separator/>
+                                                    <HStack justifyContent="space-between">
+                                                        <Text fontWeight="bold" fontSize="lg">總計</Text>
+                                                        <Text fontWeight="bold" fontSize="2xl"
+                                                              color="red.500">$0</Text>
+                                                    </HStack>
+                                                </Stack>
+                                            </HStack>
+                                        </Box>
+                                    </Box>
 
-                <div className="mt-10 text-sm text-zinc-700">客戶簽章</div>
-                <div className="mt-24 h-px bg-zinc-200" />
-                <div className="mt-6 text-center text-xs text-zinc-400">
-                  使用報價單產生器製作｜demo clone
-                </div>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </div>
-    </div>
-  )
+                                    {/* 其他資訊 Section */}
+                                    <Box mt={2} borderRadius="2xl" border="1px" borderColor={borderColor} shadow="sm">
+                                        <Flex justify="space-between" align="center" px={6} py={5} borderBottom="1px"
+                                              borderColor="gray.100">
+                                            <HStack spacing={3}>
+                                                <Flex w={11} h={11} align="center" justify="center" bg="gray.100"
+                                                      borderRadius="full">
+                                                    <LuShoppingCart/>
+                                                </Flex>
+                                                <Heading size="xl">其他資訊</Heading>
+                                            </HStack>
+                                        </Flex>
+                                        <VStack spacing={6} p={6} align="stretch">
+                                            {/* 客戶資料 */}
+                                            <Box p={5} borderRadius="2xl">
+                                                <SimpleGrid columns={{base: 1, md: 1}} spacing={4}>
+                                                    <Box p={1}>
+                                                        <Text mb={2} fontSize="sm" fontWeight="medium">
+                                                            付款條件
+                                                        </Text>
+                                                        <Textarea bg={inputBg}
+                                                                  placeholder="例: 簽約 30% 完工 60% 驗收 10%"
+                                                                  borderRadius="xl" />
+                                                    </Box>
+                                                    <Box p={1}>
+                                                        <Text mb={2} fontSize="sm" fontWeight="medium">備註</Text>
+                                                        <Textarea bg={inputBg}
+                                                                  placeholder="請輸入備註"
+                                                                  borderRadius="xl" />
+                                                    </Box>
+                                                    <Box p={1}>
+                                                        <CustomCheckbox label="是否顯示簽章欄位"
+                                                                        variant="outline"
+                                                                        colorPalette="cyan"
+                                                                        defaultChecked={true} />
+                                                    </Box>
+                                                </SimpleGrid>
+                                            </Box>
+                                        </VStack>
+                                    </Box>
+                                </VStack>
+
+                                {/* 右側預覽 Aside */}
+                                <Box as="aside" position="sticky" top={6} h="fit-content" flex={1} borderRadius="2xl"
+                                     border="1px" borderColor={borderColor} shadow="sm">
+                                    <Box px={6} py={5} borderBottom="1px" borderColor="gray.100">
+                                        <HStack spacing={2}>
+                                            <Flex w={11} h={11} align="center" justify="center" bg="gray.100"
+                                                  borderRadius="full">
+                                                <Eye/>
+                                            </Flex>
+                                            <Heading size="xl">
+                                                即時預覽
+                                            </Heading>
+                                            <Separator/>
+                                        </HStack>
+                                    </Box>
+
+                                    <VStack spacing={5} p={6} align="stretch">
+                                        <Alert.Root status="warning" title="請先完成必填欄位後才能匯出報價單">
+                                            <Alert.Indicator/>
+                                            <Alert.Title>請先完成必填欄位後才能匯出報價單。</Alert.Title>
+                                        </Alert.Root>
+
+                                        <HStack spacing={2}>
+                                            <Button size="sm" variant="outline" borderRadius="2xl" disabled>
+                                                PDF
+                                            </Button>
+                                            <Button size="sm" variant="outline" borderRadius="2xl" disabled>
+                                                圖片
+                                            </Button>
+                                            <Button size="sm" variant="outline" borderRadius="2xl" disabled>
+                                                Excel
+                                            </Button>
+                                        </HStack>
+
+                                        <Box>
+                                            <Text mb={3} fontSize="sm" fontWeight="medium" color="gray.500">選擇報價單樣式</Text>
+                                            <HStack spacing={2}>
+                                                <Button size="sm" variant="outline" colorPalette="cyan" borderRadius="2xl">精美版</Button>
+                                                <Button size="sm" variant="outline" colorPalette="cyan" borderRadius="2xl">詳細版</Button>
+                                                <Button size="sm" variant="outline" colorPalette="cyan" borderRadius="2xl">並列版</Button>
+                                            </HStack>
+                                        </Box>
+
+                                        {/* 預覽卡片 */}
+                                        <Box p={6} border="1px" borderColor="gray.200" borderRadius="2xl"
+                                             shadow="inner">
+                                            <Heading size="lg" mb={5}>[客戶名稱] - 報價單</Heading>
+                                            <Separator/>
+
+                                            <SimpleGrid columns={2} spacingY={2} fontSize="sm" mb={6}>
+                                                <Text fontWeight="bold">報價人員：</Text>
+                                                <Text>-</Text>
+                                                <Text fontWeight="bold">報價日期：</Text>
+                                                <Text>2026-03-17</Text>
+                                            </SimpleGrid>
+
+                                            <Box borderRadius="xl" border="1px" borderColor="gray.200"
+                                                 overflow="hidden">
+                                                <CustomTable columns={columns} data={data} />
+                                            </Box>
+
+                                            <Text mt={4} textAlign="right" fontSize="lg" fontWeight="bold">
+                                                未稅：<Text as="span" color="red.600">NT$ 48,000 元</Text>
+                                            </Text>
+
+                                            <VStack align="stretch" mt={10} spacing={10}>
+                                                <Text fontSize="sm">客戶簽章</Text>
+                                                <Separator/>
+                                                <Text textAlign="center" fontSize="xs" color="gray.400">
+                                                    使用
+                                                    <Link href="https://quote-generator-kappa-blond.vercel.app" colorPalette="blue">
+                                                        報價單產生器
+                                                    </Link>
+                                                    製作｜https://quote-generator-kappa-blond.vercel.app
+                                                </Text>
+                                            </VStack>
+                                        </Box>
+                                    </VStack>
+                                </Box>
+                            </SimpleGrid>
+                        </Tabs.Content>
+                    </Tabs.Root>
+                </HStack>
+            </Container>
+        </Box>
+    );
 }
-
