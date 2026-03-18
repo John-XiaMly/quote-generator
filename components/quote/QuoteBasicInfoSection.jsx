@@ -4,11 +4,9 @@ import {
   Box,
   Button,
   Collapsible,
-  FileUpload,
   Flex,
   Heading,
   HStack,
-  Icon,
   Input,
   InputGroup,
   SimpleGrid,
@@ -27,16 +25,21 @@ import {
   ScrollText,
   User,
 } from "lucide-react";
-import { LuUpload } from "react-icons/lu";
 import { CustomDatePicker } from "@/components/form/CustomDatePicker";
+import {Controller, useFormContext} from "react-hook-form";
+import {useState} from "react";
+import { CustomFileUpload } from "@/components/form/CustomFileUpload";
 
 export default function QuoteBasicInfoSection({
-  open,
-  setOpen,
+  onHidePreview,
   formBg,
   inputBg,
   borderColor,
 }) {
+  const [displayCustomer, setDisplayCustomer] = useState(false);
+  const [displayQuotation, setDisplayQuotation] = useState(false);
+  const { register, control } = useFormContext();
+
   return (
     <Box borderRadius="2xl" border="1px" borderColor={borderColor} shadow="sm" overflow="hidden">
       <Flex
@@ -54,7 +57,7 @@ export default function QuoteBasicInfoSection({
           <Heading size="xl">基本資料</Heading>
         </HStack>
 
-        <Button variant="link" size="sm" color="gray.500">
+        <Button variant="link" size="sm" color="gray.500" onClick={onHidePreview}>
           <PanelRightClose />
           隱藏預覽
         </Button>
@@ -75,7 +78,7 @@ export default function QuoteBasicInfoSection({
                 <Text as="span" color="red.500">*</Text>
               </Text>
               <InputGroup startElement={<Building2 size={16} />}>
-                <Input bg={inputBg} placeholder="請輸入客戶名稱" borderRadius="xl" />
+                <Input bg={inputBg} placeholder="請輸入客戶名稱" borderRadius="xl" {...register("customerName", { required: "必須填寫" })} />
               </InputGroup>
             </Box>
 
@@ -84,7 +87,7 @@ export default function QuoteBasicInfoSection({
                 統一編號
               </Text>
               <InputGroup startElement={<FileText size={16} />}>
-                <Input bg={inputBg} placeholder="請輸入統一編號" borderRadius="xl" />
+                <Input bg={inputBg} placeholder="請輸入統一編號" borderRadius="xl" {...register("customerTaxId")} />
               </InputGroup>
             </Box>
           </SimpleGrid>
@@ -95,9 +98,9 @@ export default function QuoteBasicInfoSection({
                 mb={5}
                 fontSize="lg"
                 fontWeight="semibold"
-                onClick={() => setOpen(!open)}
+                onClick={() => setDisplayCustomer(!displayCustomer)}
               >
-                {open ? <ChevronUp /> : <ChevronDown />}
+                { displayCustomer ? <ChevronUp /> : <ChevronDown /> }
                 <Text>LOGO、聯絡人、電話、地址</Text>
               </HStack>
             </Collapsible.Trigger>
@@ -110,19 +113,9 @@ export default function QuoteBasicInfoSection({
                     <Text as="span" color="red.500">*</Text>
                   </Text>
 
-                  <FileUpload.Root maxW="4xl" alignItems="stretch" maxFiles={10}>
-                    <FileUpload.HiddenInput />
-                    <FileUpload.Dropzone>
-                      <Icon size="md" color="fg.muted">
-                        <LuUpload />
-                      </Icon>
-                      <FileUpload.DropzoneContent>
-                        <Text color="fg.muted">上傳客戶 Logo</Text>
-                        <Text color="fg.muted">支援 PNG、JPG、GIF</Text>
-                      </FileUpload.DropzoneContent>
-                    </FileUpload.Dropzone>
-                    <FileUpload.List />
-                  </FileUpload.Root>
+                  <Controller name="customerLogo"  control={control} render={({ field }) => (
+                      <CustomFileUpload maxW="100%" maxFiles={1} text="上傳客戶 LOGO" supportType="支援 PNG、JPG、GIF" {...field} />
+                  )} />
                 </Box>
               </SimpleGrid>
 
@@ -132,17 +125,20 @@ export default function QuoteBasicInfoSection({
                     聯絡人
                   </Text>
                   <InputGroup startElement={<User size={16} />}>
-                    <Input bg={inputBg} placeholder="請輸入聯絡人" borderRadius="xl" />
+                    <Input bg={inputBg} placeholder="請輸入聯絡人" borderRadius="xl" {...register("contactPerson")} />
                   </InputGroup>
                 </Box>
 
                 <Box p={1}>
                   <Text mb={2} fontSize="sm" fontWeight="medium">
-                    連絡電話
+                    聯絡電話
                   </Text>
-                  <InputGroup startElement={<Phone size={16} />}>
-                    <Input bg={inputBg} placeholder="請輸入連絡電話" borderRadius="xl" />
-                  </InputGroup>
+                  <HStack>
+                    <InputGroup startElement={<Phone size={16} />}>
+                      <Input bg={inputBg} placeholder="請輸入聯絡電話" borderRadius="xl" {...register("customerPhone")} />
+                    </InputGroup>
+                    <Input bg={inputBg} placeholder="分機" w="24" borderRadius="xl" {...register("customerPhoneExt")} />
+                  </HStack>
                 </Box>
               </SimpleGrid>
 
@@ -152,7 +148,7 @@ export default function QuoteBasicInfoSection({
                     Email
                   </Text>
                   <InputGroup startElement={<Mail size={16} />}>
-                    <Input bg={inputBg} placeholder="請輸入Email" borderRadius="xl" />
+                    <Input bg={inputBg} placeholder="請輸入Email" borderRadius="xl" {...register("customerEmail")} />
                   </InputGroup>
                 </Box>
 
@@ -161,7 +157,7 @@ export default function QuoteBasicInfoSection({
                     地址
                   </Text>
                   <InputGroup startElement={<MapPin size={16} />}>
-                    <Input bg={inputBg} placeholder="請輸入地址" borderRadius="xl" />
+                    <Input bg={inputBg} placeholder="請輸入地址" borderRadius="xl" {...register("customerAddress")} />
                   </InputGroup>
                 </Box>
               </SimpleGrid>
@@ -183,7 +179,8 @@ export default function QuoteBasicInfoSection({
                 <Text as="span" color="red.500">*</Text>
               </Text>
               <InputGroup startElement={<User size={16} />}>
-                <Input bg={inputBg} placeholder="請輸入報價人員" borderRadius="xl" />
+                <Input bg={inputBg} placeholder="請輸入報價人員" borderRadius="xl"
+                       {...register("quotationName", { required: "必須填寫" })} />
               </InputGroup>
             </Box>
 
@@ -192,38 +189,84 @@ export default function QuoteBasicInfoSection({
                 統一編號
               </Text>
               <InputGroup startElement={<FileText size={16} />}>
-                <Input bg={inputBg} placeholder="請輸入統一編號" borderRadius="xl" />
+                <Input bg={inputBg} placeholder="請輸入統一編號" borderRadius="xl" {...register("quotationTaxId")} />
               </InputGroup>
             </Box>
+          </SimpleGrid>
 
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
             <Box p={1}>
               <Text mb={2} fontSize="sm" fontWeight="medium">
                 Email
                 <Text as="span" color="red.500">*</Text>
               </Text>
               <InputGroup startElement={<Mail size={16} />}>
-                <Input bg={inputBg} placeholder="請輸入Email" borderRadius="xl" />
+                <Input bg={inputBg} placeholder="請輸入Email" borderRadius="xl"
+                       {...register("quotationEmail", { required: "必須填寫" })} />
               </InputGroup>
             </Box>
-
             <Box p={1}>
               <Text mb={2} fontSize="sm" fontWeight="medium">
                 聯絡電話
               </Text>
               <HStack>
                 <InputGroup startElement={<Phone size={16} />}>
-                  <Input bg={inputBg} placeholder="請輸入聯絡電話" borderRadius="xl" />
+                  <Input bg={inputBg} placeholder="請輸入聯絡電話" borderRadius="xl" {...register("quotationPhone")} />
                 </InputGroup>
-                <Input bg={inputBg} placeholder="分機" w="24" borderRadius="xl" />
+                <Input bg={inputBg} placeholder="分機" w="24" borderRadius="xl" {...register("quotationPhoneExt")} />
               </HStack>
             </Box>
+          </SimpleGrid>
 
+            <Collapsible.Root>
+              <Collapsible.Trigger padding="2">
+                <HStack
+                    mb={5}
+                    fontSize="lg"
+                    fontWeight="semibold"
+                    onClick={() => setDisplayQuotation(!displayQuotation)}
+                >
+                  { displayQuotation ? <ChevronUp /> : <ChevronDown /> }
+                  <Text>LOGO、發票章、地址</Text>
+                </HStack>
+              </Collapsible.Trigger>
+              <Collapsible.Content>
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                  <Box p={1}>
+                    <Text mb={2} fontSize="sm" fontWeight="medium">
+                      公司 LOGO
+                    </Text>
+                    <Controller name="companyLogo"  control={control} render={({ field }) => (
+                        <CustomFileUpload maxW="100%" maxFiles={1} text="上傳公司 LOGO" supportType="支援 PNG、JPG、GIF" {...field} />
+                    )} />
+                  </Box>
+
+                  <Box p={1}>
+                    <Text mb={2} fontSize="sm" fontWeight="medium">
+                      公司發票章
+                    </Text>
+                    <Controller name="companyStamp"  control={control} render={({ field }) => (
+                        <CustomFileUpload maxW="100%" maxFiles={1} text="上傳公司發票章" supportType="支援 PNG、JPG、GIF" {...field} />
+                    )} />
+                  </Box>
+                </SimpleGrid>
+                <Box p={1}>
+                  <Text mb={2} fontSize="sm" fontWeight="medium">
+                    公司地址
+                  </Text>
+                  <InputGroup startElement={<MapPin size={16} />}>
+                    <Input bg={inputBg} placeholder="請輸入公司地址" borderRadius="xl" {...register("companyAddress")} />
+                  </InputGroup>
+                </Box>
+              </Collapsible.Content>
+            </Collapsible.Root>
+
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
             <Box p={1}>
-              <CustomDatePicker label="報價日期" bg={inputBg} borderRadius="xl" />
+              <CustomDatePicker label="報價日期" bg={inputBg} borderRadius="xl" {...register("quotationDate")} />
             </Box>
-
             <Box p={1}>
-              <CustomDatePicker label="有效日期" bg={inputBg} borderRadius="xl" />
+              <CustomDatePicker label="有效日期" bg={inputBg} borderRadius="xl" {...register("effectiveDate")} />
             </Box>
           </SimpleGrid>
         </Box>
