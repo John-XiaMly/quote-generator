@@ -24,7 +24,8 @@ const FileUploadList = () => {
         </FileUpload.ItemGroup>
     )
 }
-export const CustomFileUpload = ({ text, supportType, onChange, value, ...props }) => {
+
+export const CustomFileUpload = ({ text, supportType, onChange, ...props }) => {
     return (
         <FileUpload.Root alignItems="stretch" {...props} onFileChange={details => onChange(details.acceptedFiles)}>
             <FileUpload.HiddenInput />
