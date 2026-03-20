@@ -18,7 +18,11 @@ import { FormProvider, useForm } from "react-hook-form";
 
 export default function QuoteGeneratorChakra() {
     const [displayPreview, setDisplayPreview] = useState(false);
-    const methods = useForm();
+    const methods = useForm({
+        defaultValues: {
+            "displaySignature": true
+        }
+    });
 
     // 色彩配置
     const formBg = {base: 'gray.200'};
