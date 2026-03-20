@@ -21,6 +21,7 @@ import {
   Mail,
   MapPin,
   PanelRightClose,
+  PanelLeftClose,
   Phone,
   ScrollText,
   User,
@@ -31,6 +32,7 @@ import {useState} from "react";
 import { CustomFileUpload } from "@/components/form/CustomFileUpload";
 
 export default function QuoteBasicInfoSection({
+  displayPreview,
   onHidePreview,
   formBg,
   inputBg,
@@ -58,8 +60,16 @@ export default function QuoteBasicInfoSection({
         </HStack>
 
         <Button variant="link" size="sm" color="gray.500" onClick={onHidePreview}>
-          <PanelRightClose />
-          隱藏預覽
+          {
+            displayPreview ?
+              <>
+                <PanelRightClose />
+                隱藏預覽
+              </> : <>
+                <PanelLeftClose />
+                顯示預覽
+              </>
+          }
         </Button>
       </Flex>
 
@@ -113,7 +123,7 @@ export default function QuoteBasicInfoSection({
                     <Text as="span" color="red.500">*</Text>
                   </Text>
 
-                  <Controller name="customerLogo"  control={control} render={({ field }) => (
+                  <Controller name="customerLogo" control={control} render={({ field }) => (
                       <CustomFileUpload maxW="100%" maxFiles={1} text="上傳客戶 LOGO" supportType="支援 PNG、JPG、GIF" {...field} />
                   )} />
                 </Box>

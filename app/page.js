@@ -66,6 +66,7 @@ export default function QuoteGeneratorChakra() {
                                                 gep={6}>
                                         <VStack spacing={6} align="stretch" flex={1}>
                                             <QuoteBasicInfoSection
+                                                displayPreview={displayPreview}
                                                 onHidePreview={() => setDisplayPreview(!displayPreview)}
                                                 formBg={formBg}
                                                 inputBg={inputBg}
