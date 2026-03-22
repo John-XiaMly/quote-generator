@@ -1,18 +1,27 @@
 import React from 'react';
-import { FileUpload, Float, Icon, Text, useFileUploadContext } from "@chakra-ui/react";
+import { FileUpload, Float, Icon, Text } from "@chakra-ui/react";
 import { Upload, X } from "lucide-react";
 
-const FileUploadList = () => {
-    const fileUpload = useFileUploadContext();
-    const files = fileUpload.acceptedFiles;
+const FileUploadList = ({ files = [] }) => {
     if (files.length === 0) {
         return null;
     }
 
     return (
-        <FileUpload.ItemGroup>
+        <FileUpload.ItemGroup
+            display="flex"
+            flexDirection="row"
+            flexWrap="wrap"
+            gap={4}
+        >
             {files.map((file) => (
-                <FileUpload.Item w="auto" boxSize="20" p="2" file={file} key={file.name}>
+                <FileUpload.Item
+                    key={`${file.name}-${file.lastModified}`}
+                    w="auto"
+                    boxSize="20"
+                    p="2"
+                    file={file}
+                >
                     <FileUpload.ItemPreviewImage />
                     <Float placement="top-end">
                         <FileUpload.ItemDeleteTrigger boxSize="4" layerStyle="fill.solid">
@@ -25,9 +34,17 @@ const FileUploadList = () => {
     )
 }
 
-export const CustomFileUpload = ({ text, supportType, onChange, ...props }) => {
+export const CustomFileUpload = ({ text, supportType, onChange, value, ...props }) => {
+    const handleFileChange = (details) => {
+        const fileMap = new Map();
+        details.acceptedFiles.forEach(file => {
+            fileMap.set(`${file.name}-${file.lastModified}`, file);
+        });
+        onChange(Array.from(fileMap.values()));
+    }
+
     return (
-        <FileUpload.Root alignItems="stretch" {...props} onFileChange={details => onChange(details.acceptedFiles)}>
+        <FileUpload.Root alignItems="stretch" {...props} onFileChange={handleFileChange}>
             <FileUpload.HiddenInput />
             <FileUpload.Dropzone>
                 <Icon size="md" color="fg.muted">
@@ -38,7 +55,7 @@ export const CustomFileUpload = ({ text, supportType, onChange, ...props }) => {
                     <Text color="fg.muted">{supportType}</Text>
                 </FileUpload.DropzoneContent>
             </FileUpload.Dropzone>
-            <FileUploadList />
+            <FileUploadList files={value} />
         </FileUpload.Root>
     );
 };
