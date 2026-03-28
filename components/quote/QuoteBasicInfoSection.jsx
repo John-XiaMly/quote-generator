@@ -22,6 +22,7 @@ import {
   FileText,
   Mail,
   MapPin,
+  PanelLeftClose,
   PanelRightClose,
   Phone,
   ScrollText,
@@ -29,14 +30,17 @@ import {
 } from "lucide-react";
 import { LuUpload } from "react-icons/lu";
 import { CustomDatePicker } from "@/components/form/CustomDatePicker";
+import {useState} from "react";
 
 export default function QuoteBasicInfoSection({
-  open,
-  setOpen,
+  displayPreview,
+  handleDisplayPreview,
   formBg,
   inputBg,
   borderColor,
 }) {
+  const [displayCustomer, setDisplayCustomer] = useState(false);
+
   return (
     <Box borderRadius="2xl" border="1px" borderColor={borderColor} shadow="sm" overflow="hidden">
       <Flex
@@ -54,9 +58,17 @@ export default function QuoteBasicInfoSection({
           <Heading size="xl">基本資料</Heading>
         </HStack>
 
-        <Button variant="link" size="sm" color="gray.500">
-          <PanelRightClose />
-          隱藏預覽
+        <Button variant="link" size="sm" color="gray.500" onClick={handleDisplayPreview}>
+          {
+            displayPreview ?
+                <>
+                  <PanelRightClose />
+                  隱藏預覽
+                </> : <>
+                  <PanelLeftClose />
+                  顯示預覽
+                </>
+          }
         </Button>
       </Flex>
 
@@ -95,9 +107,9 @@ export default function QuoteBasicInfoSection({
                 mb={5}
                 fontSize="lg"
                 fontWeight="semibold"
-                onClick={() => setOpen(!open)}
+                onClick={() => setDisplayCustomer(prev => !prev)}
               >
-                {open ? <ChevronUp /> : <ChevronDown />}
+                { displayCustomer ? <ChevronUp /> : <ChevronDown /> }
                 <Text>LOGO、聯絡人、電話、地址</Text>
               </HStack>
             </Collapsible.Trigger>
