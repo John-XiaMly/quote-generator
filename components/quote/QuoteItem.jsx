@@ -14,17 +14,15 @@ export const QuoteItem = ({ index }) => {
             <FloatingInput
                 label="項目"
                 width="100px"
-                errorText="項目名稱不得為空"
-                invalid={!!errors.items?.[index].name}
-                {...register(`items.${index}.name`, { required: true })}
+                invalid={!!errors.items?.[index]?.name}
+                {...register(`items.${index}.name`, { required: "項目名稱不得為空" })}
             />
 
             <FloatingInput
                 label="單價"
                 width="100px"
-                errorText="單價不得為空"
-                invalid={!!errors.items?.[index].price}
-                {...register(`items.${index}.price`, { required: true })}
+                invalid={!!errors.items?.[index]?.price}
+                {...register(`items.${index}.price`, { required: "單價不得為空" })}
             />
 
             <FloatingInput label="數量" width="80px" defaultValue={1} {...register(`items.${index}.quantity`)} />
