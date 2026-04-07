@@ -15,15 +15,33 @@ import {
 import { DollarSign, Plus } from "lucide-react";
 import { LuShoppingCart } from "react-icons/lu";
 import { CustomNumberInput } from "@/components/form/CustomNumberInput";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import { QuoteItem } from "@/components/quote/QuoteItem";
+import { useMemo } from "react";
 
 export default function QuoteItemsSection({ borderColor }) {
-  const { control, getValues   } = useFormContext();
+  const { register, control, getValues } = useFormContext();
   const { fields, insert, remove } = useFieldArray({
     control,
     name: "items",
   });
+
+  const [items, discountType, discount] = useWatch({
+    control,
+    name: ['items', 'discountType', 'discount']
+  });
+
+  const subTotalAmt = useMemo(() => {
+    return  items.reduce((acc, item) => {
+      const p = parseInt(item.price) || 0;
+      const q = parseInt(item.quantity) || 0;
+      return acc + (p * q);
+    }, 0);
+  }, [items]);
+
+  const discountAmt = discountType === 'fixed' ? discount : subTotalAmt - (subTotalAmt * (discount / 100));
+  const discountAfterAmt = subTotalAmt - discountAmt;
+  const totalAmt = subTotalAmt - discountAmt;
 
   const addItem = (index) => {
     const item = getValues(`items.${index}`);
@@ -80,9 +98,9 @@ export default function QuoteItemsSection({ borderColor }) {
 
                 <HStack>
                   <NativeSelect.Root width="150px">
-                    <NativeSelect.Field>
+                    <NativeSelect.Field {...register('discountType')}>
                       <option value="fixed">固定金額</option>
-                      <option value="percent">百分比</option>
+                      <option value="percent">折數</option>
                     </NativeSelect.Field>
                   </NativeSelect.Root>
 
@@ -90,6 +108,7 @@ export default function QuoteItemsSection({ borderColor }) {
                       defaultValue={0}
                       min={0}
                       startElement={<DollarSign size={16} />}
+                      {...register('discount')}
                   />
                 </HStack>
               </Box>
@@ -115,9 +134,27 @@ export default function QuoteItemsSection({ borderColor }) {
               <HStack justifyContent="space-between">
                 <Text color="gray.500">小計</Text>
                 <Text fontWeight="bold" fontSize="lg">
-                  $0
+                  $ {subTotalAmt}
                 </Text>
               </HStack>
+
+              { discount > 0 &&
+                <>
+                  <HStack justifyContent="space-between">
+                    <Text color="gray.500">{ discountType === 'fixed' ? '折扣' : `折扣 (${discount}折)` }</Text>
+                    <Text fontWeight="bold" fontSize="lg">
+                      -$ {discountAmt}
+                    </Text>
+                  </HStack>
+                  <HStack justifyContent="space-between">
+                    <Text color="gray.500">折扣後</Text>
+                    <Text fontWeight="bold" fontSize="lg">
+                      $ {discountAfterAmt}
+                    </Text>
+                  </HStack>
+                </>
+              }
+
 
               <Separator />
 
@@ -126,7 +163,7 @@ export default function QuoteItemsSection({ borderColor }) {
                   總計
                 </Text>
                 <Text fontWeight="bold" fontSize="2xl" color="red.500">
-                  $0
+                  $ { totalAmt }
                 </Text>
               </HStack>
             </Stack>
