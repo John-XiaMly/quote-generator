@@ -94,9 +94,12 @@ export default function QuoteItemsSection({ borderColor }) {
               <QuoteItem key={field.id} index={index} handleCopy={addItem} handleRemove={removeItem} />
           )) }
 
-          <HStack alignItems="flex-start" justifyContent="space-between">
-            <Stack gap="4" width="50%">
-              {/* 折扣設定 */}
+          <Stack
+            direction={{ base: "column", lg: "row" }}
+            align="flex-start"
+            justify="space-between"
+          >
+            <Stack gap="4" width={{ base: "100%", lg: "50%" }}>              {/* 折扣設定 */}
               <Box>
                 <Text fontSize="sm" fontWeight="bold" mb="2">
                   折扣設定
@@ -140,7 +143,11 @@ export default function QuoteItemsSection({ borderColor }) {
             </Stack>
 
             {/* 右側金額統計 */}
-            <Stack width="200px" gap="4" textAlign="right">
+            <Stack
+              width={{ base: "100%", lg: "200px" }}
+              gap="4"
+              textAlign={{ base: "left", lg: "right" }}
+            >
               <HStack justifyContent="space-between">
                 <Text color="gray.500">小計</Text>
                 <Text fontWeight="bold" fontSize="lg">
@@ -179,7 +186,7 @@ export default function QuoteItemsSection({ borderColor }) {
                 </Text>
               </HStack>
             </Stack>
-          </HStack>
+          </Stack>
         </VStack>
       </Box>
     </Box>
