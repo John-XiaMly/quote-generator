@@ -124,7 +124,7 @@ export default function QuoteBasicInfoSection({
                     客戶 Logo
                   </Text>
 
-                  <FileUpload.Root maxW="4xl" alignItems="stretch" maxFiles={10} {...register("customerLogo")}>
+                  <FileUpload.Root maxW="100%" alignItems="stretch" maxFiles={10} {...register("customerLogo")}>
                     <FileUpload.HiddenInput />
                     <FileUpload.Dropzone>
                       <Icon size="md" color="fg.muted">
@@ -313,7 +313,7 @@ export default function QuoteBasicInfoSection({
                   name="quoteDate"
                   control={control}
                   render={({ field }) => (
-                      <CustomDatePicker label="報價日期" bg={inputBg} borderRadius="xl" {...field} />
+                      <CustomDatePicker label="報價日期" bg={inputBg} borderRadius="xl" maxW="100%" {...field} />
                   )} />
             </Box>
 
@@ -322,7 +322,7 @@ export default function QuoteBasicInfoSection({
                   name="effectiveDate"
                   control={control}
                   render={({ field }) => (
-                      <CustomDatePicker label="有效日期" bg={inputBg} borderRadius="xl" {...field} />
+                      <CustomDatePicker label="有效日期" bg={inputBg} borderRadius="xl" maxW="100%" {...field} />
                   )}  />
             </Box>
           </SimpleGrid>
