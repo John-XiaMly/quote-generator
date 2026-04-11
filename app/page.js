@@ -63,7 +63,7 @@ export default function QuoteGeneratorChakra() {
                         <Tabs.Content value="quote" p={2}>
                             <FormProvider {...methods}>
                                 <form>
-                                    <SimpleGrid templateColumns={displayPreview ? { base: '1fr', lg: '1.2fr 1fr' } : '1fr'}>
+                                    <SimpleGrid gap={4} templateColumns={displayPreview ? { base: '1fr', lg: '1.2fr 1fr' } : '1fr'}>
                                         <VStack spacing={6} align="stretch" flex={1} minW={0} w="100%">
                                             <QuoteBasicInfoSection
                                                 displayPreview={displayPreview}
