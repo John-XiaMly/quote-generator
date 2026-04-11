@@ -36,8 +36,8 @@ export default function QuoteExtraInfoSection({ inputBg, borderColor }) {
       </Flex>
 
       <VStack spacing={6} p={6} align="stretch">
-        <Box p={5} borderRadius="2xl">
-          <SimpleGrid columns={{ base: 1, md: 1 }} spacing={4}>
+        <Box borderRadius="2xl">
+          <SimpleGrid spacing={4}>
             <Box p={1}>
               <Text mb={2} fontSize="sm" fontWeight="medium">
                 付款條件
